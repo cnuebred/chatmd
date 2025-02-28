@@ -8,3 +8,4 @@ if [[ "$1" ==  " " ]]; then
 fi 
 
 sftp -P$SERVER_PORT $SERVER_USER@$SERVER_HOSTNAME:$SERVER_PROJECT_PATH <<< $"put -R $1"
+
