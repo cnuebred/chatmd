@@ -7,7 +7,7 @@ dotenv.config()
 
 const app = express()
 const pinup = new Pinup(app, {
-    port: 3300,
+    port: parseInt(process.env.BACKEND_PORT),
     auth: {
         secret: process.env.BACKEND_AUTH_SECRET
     },
