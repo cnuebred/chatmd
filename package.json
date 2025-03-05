@@ -11,9 +11,10 @@
 	"license": "ISC",
 	"description": "web application - basic tools for developers + knowledge storage",
 	"dependencies": {
-		"pinup": "^1.1.13",
+		"@cnuebred/frontforge": "^0.0.13",
 		"@types/node": "^18.15.11",
-		"dotenv": "^16.4.5"
+		"dotenv": "^16.4.5",
+		"pinup": "^1.1.15"
 	},
 	"devDependencies": {
 		"@types/jest": "^29.5.3",

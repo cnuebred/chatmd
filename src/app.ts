@@ -1,6 +1,7 @@
 import { Pinup } from 'pinup'
 import express from 'express'
 import dotenv from 'dotenv'
+import { Admin } from './components/admin/admin.comp'
 
 dotenv.config({ path: ['.process', '.env'] })
 
@@ -16,6 +17,8 @@ const pinup = new Pinup(app, {
 })
 
 console.log(`APP VERSION: ${process.env.CHATMD_VERSION}`)
+
+pinup.pin(Admin)
 
 pinup.run({
     print_setup_config: true
