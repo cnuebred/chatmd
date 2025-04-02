@@ -1,0 +1,19 @@
+
+@mixin icon-button($icon, $size) {
+  display: inline-block;
+  background-image: url('./view/assets/#{$icon}.svg');
+  background-size: contain; 
+  background-repeat: no-repeat;
+  width: $size;
+  height: $size;
+}
+
+.github-button {
+  @include icon-button('github-svgrepo-com', 30px);
+}
+.google-button {
+  @include icon-button('google-color-svgrepo-com', 25px);
+}
+.discord-button {
+  @include icon-button('discord-svgrepo-com', 30px);
+}
