@@ -1,0 +1,67 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("SQLITE_SERVICE_DATABASE_URL")
+}
+
+enum status_active_e {
+  ACTIVE
+  INACTIVE
+  REJECTED
+}
+
+enum login_method_e {
+  DISCORD
+  GITHUB
+  EMAIL
+  GOOGLE
+}
+
+model Role {
+  id         Int             @id @default(autoincrement())
+  created_at DateTime        @default(now())
+  name       String
+  users      UserOnRoles[]
+  status     status_active_e
+}
+
+model LoginHistory {
+  id           Int            @id @default(autoincrement())
+  created_at   DateTime       @default(now())
+  user         User           @relation(fields: [user_id], references: [id])
+  user_id      Int
+  login_method login_method_e
+}
+
+model User {
+  id            Int             @id @default(autoincrement())
+  created_at    DateTime        @default(now())
+  hash          String          
+  username      String
+  email         String
+  verifed_email Boolean
+  password      String
+  user_data     String // json of user data 
+  login_method  login_method_e
+  status        status_active_e
+  roles         UserOnRoles[]
+  LoginHistory  LoginHistory[]
+}
+
+model UserOnRoles {
+  user        User            @relation(fields: [user_id], references: [id])
+  user_id     Int
+  role        Role            @relation(fields: [role_id], references: [id])
+  created_at  DateTime        @default(now())
+  role_id     Int
+  assigned_by Int
+  status      status_active_e
+
+  @@id([user_id, role_id])
+}

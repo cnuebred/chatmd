@@ -1,9 +1,17 @@
 import { Pinup } from 'pinup'
 import express from 'express'
 import dotenv from 'dotenv'
-
 dotenv.config({ path: ['.process', '.env'] })
 
+import { Auth } from './components/auth/auth.comp'
+import { hot_reload_backend_client, ifdev } from './utils/debug'
+import { User } from './components/user/user.comp'
+
+
+// EXPERIMENTAL
+process.on('uncaughtException', function (err) {
+    console.log(err);
+}); 
 
 const app = express()
 const pinup = new Pinup(app, {
@@ -17,6 +25,13 @@ const pinup = new Pinup(app, {
 
 console.log(`APP VERSION: ${process.env.CHATMD_VERSION}`)
 
+pinup.pin(Auth)
+pinup.pin(User)
+
+
 pinup.run({
     print_setup_config: true
-})
+});
+
+
+ifdev(hot_reload_backend_client)

@@ -28,6 +28,7 @@ chatmd_version="${version}_${tag}${are_changes_token}"
 
 ## SET PROCESS FILE
 echo "CHATMD_VERSION=${chatmd_version}" > .process
+echo "CHATMD_API_VERSION=0.1" >> .process
 ## END
 
 ./tools/download.sh $RELEASE_LOG

@@ -1,3 +1,13 @@
 # Environment
 .env
 node_modules
+
+# Logger 
+*.log
+
+# Build out
+*.html
+./dist
+
+prisma/database
+prisma/migrations
