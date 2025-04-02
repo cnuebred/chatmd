@@ -3,20 +3,26 @@
 	"version": "1.0.0",
 	"scripts": {
 		"dev": "npx nodemon --watch ./ --ext ts,js,scss -L --exec npx ts-node ./src/app.ts",
+		"hotreload": "node tools/hot_reload.js",
+		"dev:hotreload": "npm run dev & npm run hotreload",
 		"test": "npx jest",
-		"version": "node tools/version-bump.mjs",
+		"version": "node tools/version_bump.mjs",
 		"build": "npx tsc"
 	},
 	"author": "",
 	"license": "ISC",
 	"description": "web application - basic tools for developers + knowledge storage",
 	"dependencies": {
-		"pinup": "^1.1.13",
+		"@cnuebred/frontforge": "^0.0.30",
+		"@prisma/client": "^6.5.0",
 		"@types/node": "^18.15.11",
-		"dotenv": "^16.4.5"
+		"dotenv": "^16.4.5",
+		"pinup": "^1.1.20"
 	},
 	"devDependencies": {
 		"@types/jest": "^29.5.3",
+		"@types/ws": "^8.18.0",
+		"prisma": "^6.5.0",
 		"ts-jest": "^29.1.1",
 		"typescript": "^5.1.3"
 	}
