@@ -33,8 +33,8 @@ export const DISCORD_USER_URL =
 // queries
 export const NOTIFY_QUERY = 'notify'
 export const ERROR_CODE_QUERY = 'error_code'
-export const TOKEN_QUERY = 'token'
-export const BEARER_TOKEN = 'Bearer'
+export const TOKEN_QUERY = 'jwtoken'
+export const BEARER_TOKEN = (jwt) => `Bearer ${jwt}`
 
 // notification timeout
 export const TIMEOUT_NOTIFICATION_LIFESPAN_MS
@@ -45,7 +45,8 @@ export const TIMEOUT_NOTIFICATION_LIFESPAN_MS
 export const URL_NOTIFY_ACTIONS_NAMETAGS ={
   successful_create_account: 'c75a2688825c531c',
   success: 'da81c0cafb642a97',
-  fail: 'ffdabd757a1eaa9f'
+  fail: 'ffdabd757a1eaa9f',
+  wrong_user_account: 'fe2abd757a1eaa9f'
 }
 
 

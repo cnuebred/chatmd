@@ -1,12 +1,20 @@
 
-import { ContainerWidget, Flex, flex_align_content_e, flex_justify_e, flex_wrap_e, Grid, grid_align_content_e, grid_justify_content_e, Pocket, Widget } from "@cnuebred/frontforge"
+import { Flex, flex_justify_e, flex_wrap_e, Grid, grid_justify_content_e, Pocket, Widget } from "@cnuebred/frontforge"
 import { empty_filler } from "src/utils/view"
-import { page_center } from "src/view/templates/page"
-import { URL_NOTIFY_ACTIONS_NAMETAGS } from "src/const"
-import { basic_signal_colors_e, is_notify_eq_action, notify, send_url_notify } from "../../../view/templates/notify"
-import { update_oauth_jwt } from "src/view/templates/auth"
+import { page_cleaner } from "src/view/templates/page"
+import {
+  back_to_login,
+  get_current_auth_token_object,
+  refresh_token_or_back_to_login,
+  update_oauth_and_get_data_by_response
+} from "src/view/templates/auth"
+import { execute_global_url_query_actions } from "src/view/templates/url_setup"
 
 // @preserve HOTRELOAD_CLIENT
+
+execute_global_url_query_actions()
+refresh_token_or_back_to_login()
+
 
 const pocket = new Pocket({
   hello_span: '...',
@@ -22,10 +30,10 @@ const create_new_doc = new Widget('button.font-mono.t_center', 'Create New Doc')
 const x = new Widget('div.font-mono.docblock', '')
 
 const list_of_all_user_docs = Flex([
-  x.clone(), x.clone(), x.clone(), x.clone(), 
-  x.clone(), x.clone(), x.clone(),x.clone(),
-  x.clone(), x.clone(), x.clone(),x.clone(),
-  x.clone(), x.clone(), x.clone(),x.clone()
+  x.clone(), x.clone(), x.clone(), x.clone(),
+  x.clone(), x.clone(), x.clone(), x.clone(),
+  x.clone(), x.clone(), x.clone(), x.clone(),
+  x.clone(), x.clone(), x.clone(), x.clone()
 ], {
   justify_content: flex_justify_e.space_around,
   wrap: flex_wrap_e.wrap,
@@ -48,38 +56,20 @@ const grid = Grid([
   row_gap: '10px'
 }).hook('app')
 
-const url_query_actions = () => {
-  const url = new URL(document.location.href)
-  if (url.searchParams.get('token')) {
-    update_oauth_jwt(url.searchParams.get('token'))
-    url.searchParams.delete('token')
-    window.history.pushState('-', '-', url.href);
-  }
-}
 
 const get_user_data = async () => {
-  const auth_token = localStorage.getItem('token')?.split(' ')
-  if(!auth_token){
-    notify('Your token is invalid', basic_signal_colors_e.RED)
+  const token_pack = get_current_auth_token_object()
+  if (!token_pack) {
+    return back_to_login()
   }
-
-  const token_type = auth_token[0]
-  if (token_type == 'Bearer'){
-    const jwtoken = auth_token[1]
-    const response = await fetch(`BACKEND_ORIGIN/u/api/v0/me`, {
-      method: 'GET',
-      headers: {
-        authorization: `Bearer ${jwtoken}`
-      }
-    })
-    if (!response.ok) return
-    const data = await response.json()
-    console.log(data)
-    update_oauth_jwt(data.data.jwt)  
-    pocket.target.me_data = data.data.user
-  }else{
-    notify('Your token is invalid: "wrong type"', basic_signal_colors_e.RED)
-  }
+  const response = await fetch(`BACKEND_ORIGIN/u/api/v0/me`, {
+    method: 'GET',
+    headers: {
+      authorization: token_pack.token
+    }
+  })
+  const data = await update_oauth_and_get_data_by_response(response)
+  pocket.target.me_data = data.user
 
   pocket.target.hello_span = pocket.target.me_data.username
   login_text.class.remove('lazy_loading')
@@ -90,7 +80,14 @@ const get_user_data = async () => {
 // resolvery związane z bazą danych
 // workery związane z przetwarzaniem po stronie serwera
 
-url_query_actions()
+// dodać obsługe błędów - te z response - jeśli błąd to info o tym gdzie wystąpił itp
+
+
+// zmienić system notify - jest do dupy
+
+
+
 get_user_data()
 
-document.querySelectorAll('filler').forEach(item => item.remove()) 
+page_cleaner()
+

@@ -1,5 +1,5 @@
 import { Widget } from "@cnuebred/frontforge"
-import { TIMEOUT_NOTIFICATION_LIFESPAN_MS, URL_NOTIFY_ACTIONS_NAMETAGS } from "src/const"
+import { TIMEOUT_NOTIFICATION_LIFESPAN_MS} from "src/const"
 
 export enum basic_signal_colors_e {
   RED = '#FF8989',
@@ -22,22 +22,4 @@ export const notify = (info: string, color: basic_signal_colors_e) => {
   setTimeout(() => {banner_element.remove()}, TIMEOUT_NOTIFICATION_LIFESPAN_MS)
 
   document.querySelector('body').append(banner_element)
-}
-
-export const is_notify_eq_action = (
-  url: URL,
-  action: (typeof URL_NOTIFY_ACTIONS_NAMETAGS)[keyof typeof URL_NOTIFY_ACTIONS_NAMETAGS]
-):boolean => {
-  return url.searchParams.get('NOTIFY_QUERY') == action
-}
-
-export const send_url_notify = (
-  url: URL,
-  info: string,
-  color: basic_signal_colors_e,
-) => {
-  notify(info, color)
-  url.searchParams.delete('NOTIFY_QUERY')
-  url.searchParams.delete('ERROR_CODE_QUERY')
-  window.history.pushState('-', '-', url.href);
 }

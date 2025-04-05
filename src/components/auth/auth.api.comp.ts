@@ -69,7 +69,7 @@ export class AuthApi extends PinupController {
     return res.send(reply({
       msg: 'refresh auth',
       data: {
-        token: jwtoken
+        jwtoken: BEARER_TOKEN(jwtoken)
       },
       status: 200,
     }
@@ -123,7 +123,7 @@ export class AuthApi extends PinupController {
     )
 
     if (!response.ok) {
-      return res.redirect('/auth/login') // TODO with status fail
+      return res.redirect('/auth/login')
     }
 
     const data = await response.json()
@@ -131,25 +131,18 @@ export class AuthApi extends PinupController {
 
     const user_exist = await is_account_exist(hash)
     if (!user_exist) {
-      const status = await save_account_before_created_via_service(hash, 'GITHUB', data)
+        await save_account_before_created_via_service(hash, 'GITHUB', data)
 
-      if (status == null) {
         return res.redirect(
-          `/auth/login?${NOTIFY_QUERY}=${URL_NOTIFY_ACTIONS_NAMETAGS.fail}`
+          `/auth/login`
         )
-      } else {
-        return res.redirect(
-          `/auth/login?${NOTIFY_QUERY}=${URL_NOTIFY_ACTIONS_NAMETAGS.successful_create_account
-          }`
-        )
-      }
     } else {
       const jwt = options.auth.sign({
         hash: hash
       }, null, {
         expiresIn: '1m',
       })
-      return res.redirect(`/u?${TOKEN_QUERY}=${BEARER_TOKEN} ${jwt}`)
+      return res.redirect(`/u?${TOKEN_QUERY}=${BEARER_TOKEN(jwt)}`)
     }
 
   }

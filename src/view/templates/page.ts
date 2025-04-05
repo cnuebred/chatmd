@@ -18,4 +18,7 @@ export const page_center = (center_elements: (Widget | ContainerWidget | grid_wi
   return grid
 }
 
+export const page_cleaner = () => {
+  document.querySelectorAll('filler').forEach(item => item.remove()) 
+}
 
