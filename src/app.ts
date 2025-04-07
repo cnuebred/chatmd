@@ -3,9 +3,9 @@ import express from 'express'
 import dotenv from 'dotenv'
 dotenv.config({ path: ['.process', '.env'] })
 
-import { Auth } from './components/auth/auth.comp'
+import { Auth } from './components/auth/pin'
 import { hot_reload_backend_client, ifdev } from './utils/debug'
-import { User } from './components/user/user.comp'
+import { User } from './components/user/pin'
 
 
 // EXPERIMENTAL

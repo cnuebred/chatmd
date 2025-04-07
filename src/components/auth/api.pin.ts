@@ -1,33 +1,22 @@
 import { ForgeBundle } from "@cnuebred/frontforge/bundle"
 import { auth, need, Pinpack, pins, PinupController, reply } from "pinup"
-import { API_URL } from "../../utils/resolver"
-import { login_method_e, PrismaClient } from '@prisma/client'
+import { API_URL } from "../../utils/endpointer"
 import {
+  AUTH_API_ENDPOINT_STRUCT,
   BEARER_TOKEN,
   DISCORD_OAUTH_AUTHORIZE_TOKEN_URL,
   DISCORD_USER_URL,
   GITHUB_OAUTH_ACCESS_TOKEN_URL,
   GITHUB_USER_URL,
-  NOTIFY_QUERY,
   TOKEN_QUERY,
-  URL_NOTIFY_ACTIONS_NAMETAGS
+  USER_ENDPOINT_STRUCT,
 } from "../../const"
-import { prisma_client_error_handler } from "../../database/error_handler"
-import { createHash, randomBytes } from "crypto"
-import { discord_api_user_t, github_api_user_t } from "./auth"
-import { is_account_exist, save_account_before_created_via_service } from "./auth.resolver"
+import { createHash} from "crypto"
+import { discord_api_user_t, github_api_user_t } from "./d"
+import { is_account_exist, save_account_before_created_via_service } from "./resolver"
 import { AuthType } from "pinup/dist/d"
 
 
-export const endpoint_struct = {
-  $path: API_URL(''),
-  auth: 'auth',
-  login: 'login',
-  register: 'register',
-  min10: '10min',
-  github_auth: 'github',
-  discord_auth: 'discord',
-}
 
 export const get_discord_hash = (data: discord_api_user_t) => {
   const hash = createHash('sha256')
@@ -56,10 +45,10 @@ export class AuthApi extends PinupController {
     main_admin_panel_view: null
   }
   async $init() {
-    this.path = endpoint_struct.$path
+    this.path = AUTH_API_ENDPOINT_STRUCT.$path
     this.debug_show_statistic()
   }
-  @pins.get(endpoint_struct.auth)
+  @pins.get(AUTH_API_ENDPOINT_STRUCT.auth)
   @auth({ should_end_with_error: true })
   async auth({ req, res, options }: Pinpack) {
     const hash = options.auth.payload['hash']
@@ -75,19 +64,19 @@ export class AuthApi extends PinupController {
     }
     ))
   }
-  @pins.get(endpoint_struct.login)
+  @pins.get(AUTH_API_ENDPOINT_STRUCT.login)
   async login({ req, res, options }: Pinpack) {
     return res.send(reply('COMMING SOON'))
   }
-  @pins.get(endpoint_struct.register)
+  @pins.get(AUTH_API_ENDPOINT_STRUCT.register)
   register({ req, res, options }: Pinpack) {
     return res.send(reply('COMMING SOON'))
   }
-  @pins.get(endpoint_struct.min10)
+  @pins.get(AUTH_API_ENDPOINT_STRUCT.min10)
   min10({ req, res, options }: Pinpack) {
     return res.send(reply('COMMING SOON'))
   }
-  @pins.get(endpoint_struct.github_auth)
+  @pins.get(AUTH_API_ENDPOINT_STRUCT.github_auth)
   @need.query(['code'])
   async github_auth({ req, res, options }: Pinpack) {
     const query = [
@@ -142,11 +131,11 @@ export class AuthApi extends PinupController {
       }, null, {
         expiresIn: '1m',
       })
-      return res.redirect(`/u?${TOKEN_QUERY}=${BEARER_TOKEN(jwt)}`)
+      return res.redirect(`/${USER_ENDPOINT_STRUCT.$path}?${TOKEN_QUERY}=${BEARER_TOKEN(jwt)}`)
     }
 
   }
-  @pins.get(endpoint_struct.discord_auth)
+  @pins.get(AUTH_API_ENDPOINT_STRUCT.discord_auth)
   @need.query(['code'])
   async discord_auth({ req, res, options }: Pinpack) {
     const body = new URLSearchParams({
