@@ -1,28 +1,23 @@
-import { auth, need, Pinpack, pins, PinupController, reply } from "pinup";
-import { ForgeBundle } from '@cnuebred/frontforge/bundle'
-import { BUNDLE } from '../../utils/bundle'
+import { auth,  Pinpack, pins, PinupController, reply } from "pinup";
 import path from "path";
-import { BEARER_TOKEN, ERROR_CODE_QUERY, NOTIFY_QUERY, TOKEN_QUERY, URL_NOTIFY_ACTIONS_NAMETAGS } from "../../const";
-import { API_URL } from "../../utils/resolver";
-import { get_account_data as get_account_data_by_hash } from "./user.resolver";
+import { BEARER_TOKEN,TOKEN_QUERY, USER_API_ENDPOINT_STRUCT, USER_ENDPOINT_STRUCT} from "../../const";
+import { API_URL } from "../../utils/endpointer";
+import { get_account_data as get_account_data_by_hash } from "./resolver";
 import url from "url";
 
 
-export const endpoint_struct = {
-  $path: 'u',
-  me: `me`,
-}
+
 
 export class UserApi extends PinupController {
   async $init() {
-    this.path = API_URL('')
+    this.path = USER_API_ENDPOINT_STRUCT.$path
     this.files(path.resolve('./src/view/assets'), 'view/assets')
 
     this.debug_show_statistic()
   }
-  @pins.get(endpoint_struct.$path)
+  @pins.get()
   @auth({ should_end_with_error: false})
-  main_view({ req, res, options }: Pinpack) {
+  node({ req, res, options }: Pinpack) {
     if (options.auth.passed) {
       const hash = options.auth.payload['hash']
       const jwtoken = options.auth.sign({
@@ -30,10 +25,9 @@ export class UserApi extends PinupController {
       }, null, {
         expiresIn: '1m'
       })
-
       res.status(200).redirect(
         url.format({
-          pathname: `/${endpoint_struct.$path}/${hash}`,
+          pathname: `/${USER_ENDPOINT_STRUCT.$path}/${hash}`,
           query: {
             [TOKEN_QUERY]: BEARER_TOKEN(jwtoken)
           },
@@ -46,7 +40,7 @@ export class UserApi extends PinupController {
   }
 
 
-  @pins.get(endpoint_struct.me)
+  @pins.get(USER_API_ENDPOINT_STRUCT.me)
   @auth({ should_end_with_error: true })
   async me({ req, res, options }: Pinpack) {
     const hash = options.auth.payload['hash']

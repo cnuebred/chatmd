@@ -62,7 +62,7 @@ const get_user_data = async () => {
   if (!token_pack) {
     return back_to_login()
   }
-  const response = await fetch(`BACKEND_ORIGIN/u/api/v0/me`, {
+  const response = await fetch(`BACKEND_ORIGIN/user/api/v0/me`, {
     method: 'GET',
     headers: {
       authorization: token_pack.token

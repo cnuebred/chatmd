@@ -1,8 +1,4 @@
 import { ContainerWidget, Widget } from "@cnuebred/frontforge"
-import { TIMEOUT_NOTIFICATION_LIFESPAN_MS, URL_NOTIFY_ACTIONS_NAMETAGS } from "src/const"
-
-
-
 
 export const login_by_github_button = () => {
   const login_by_github = new ContainerWidget('button.font-mono.block_center')

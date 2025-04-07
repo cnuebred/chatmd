@@ -1,5 +1,5 @@
 import { login_method_e } from "@prisma/client"
-import { discord_api_user_t, github_api_user_t } from "./auth"
+import { discord_api_user_t, github_api_user_t } from "./d"
 import { prisma_client_error_handler } from "../../database/error_handler"
 import { PrismaClient } from "@prisma/client"
 import { randomBytes } from "crypto"

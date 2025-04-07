@@ -3,6 +3,7 @@ import { page_center, page_cleaner } from "src/view/templates/page"
 import { login_by_discord_button, login_by_github_button } from "./auth.utils.view"
 import { refresh_token_or_back_to_login } from "src/view/templates/auth"
 import { execute_global_url_query_actions } from "src/view/templates/url_setup"
+import { USER_API_ENDPOINT_STRUCT, USER_ENDPOINT_STRUCT } from "src/const"
 
 // @preserve HOTRELOAD_CLIENT
 
@@ -10,7 +11,7 @@ const async_queue = async () => {
   execute_global_url_query_actions()
   const token_pack = await refresh_token_or_back_to_login()
   if (token_pack){
-    window.location.href = `/u`
+    window.location.href = `/${USER_ENDPOINT_STRUCT.$path}`
   }
 }
 

@@ -1,6 +1,8 @@
 
 // env_names
 
+import { API_URL } from "./utils/endpointer"
+
 export const GITHUB_AUTH_CLIENT_ID =
   'GITHUB_AUTH_CLIENT_ID'
 export const GITHUB_AUTH_CLIENT_SECRET =
@@ -40,17 +42,36 @@ export const BEARER_TOKEN = (jwt) => `Bearer ${jwt}`
 export const TIMEOUT_NOTIFICATION_LIFESPAN_MS
   = 15000
 
-// url query actions
-// openssl rand -hex 8
-export const URL_NOTIFY_ACTIONS_NAMETAGS ={
-  successful_create_account: 'c75a2688825c531c',
-  success: 'da81c0cafb642a97',
-  fail: 'ffdabd757a1eaa9f',
-  wrong_user_account: 'fe2abd757a1eaa9f'
+
+// endpoints structs
+
+export const AUTH_API_ENDPOINT_STRUCT = {
+  $path: API_URL(''),
+  auth: 'auth',
+  login: 'login',
+  register: 'register',
+  min10: '10min',
+  github_auth: 'github',
+  discord_auth: 'discord',
 }
 
+export const AUTH_ENDPOINT_STRUCT = {
+  $path: 'auth',
+  login: 'login',
+  register: 'register',
+  min10: '10min',
+}
 
-// public errors - communicates 
-export const SERVICE_ERRORS = {
+export  const USER_NEED_PARAMS = {
+  user_hash: 'user_hash'
+}
+export const USER_ENDPOINT_STRUCT = {
+  $path: 'user',
+  profile: `:${USER_NEED_PARAMS.user_hash}`,
+}
 
+export const USER_API_ENDPOINT_STRUCT = {
+  $path: API_URL(''),
+  user: 'user',
+  me: `me`,
 }
